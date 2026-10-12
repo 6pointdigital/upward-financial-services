@@ -1,62 +1,25 @@
-# Next.js + Webflow Cloud
+# Upward Financial Services — Equipment Inventory
 
-Example app for [Webflow Cloud](https://webflow.com/cloud): a Next.js + React project with OpenNext for Cloudflare and Webflow deploy tooling.
+Next.js 15 app on **Webflow Cloud** (Cloudflare Workers via OpenNext) for listing commercial equipment from partner dealerships that Upward can finance.
 
-[![Deploy to Webflow](https://webflow.com/img/deploy-dark.svg)](https://webflow.com/dashboard/cloud/deploy?repo=https://github.com/Webflow-Examples/hello-world-nextjs)
+## What it does
+- **Public inventory** (`/`): search + filters (category, make, condition, price, year, state), sorting, estimated monthly payment on each card.
+- **Listing page** (`/equipment/:id`): photo gallery, specs, interactive payment estimator, financing request form.
+- **Portal** (`/portal`):
+  - *Dealers* add/edit their own listings and photos, then submit for review. Editing a live listing sends it back for re-review.
+  - *Upward admins* approve / request changes / unpublish, toggle financing eligibility, manage dealerships and users, work financing requests, and set estimator defaults (APR, terms, down %).
+- Only **approved** listings (and their photos) are public. Drafts/pending are visible only to admins and the owning dealer.
 
-## Project structure
+## Storage (Webflow Cloud bindings in `wrangler.json`)
+- `DB` — SQLite (D1). Schema in `migrations/`; Webflow Cloud applies migrations on deploy.
+- `MEDIA` — Object storage (R2) for listing photos, served through `/api/photos/...` with access checks.
 
-```text
-.
-├── public/
-│   ├── next.svg
-│   └── webflow.svg
-├── src/
-│   └── app/
-│       ├── favicon.ico
-│       ├── globals.css
-│       ├── layout.tsx
-│       └── page.tsx
-├── nextjs/
-│   ├── public/
-│   │   └── next.svg
-│   ├── src/
-│   │   └── app/
-│   │       ├── favicon.ico
-│   │       ├── globals.css
-│   │       ├── layout.tsx
-│   │       └── page.tsx
-│   ├── cloudflare-env.d.ts
-│   ├── eslint.config.mjs
-│   ├── next.config.ts
-│   ├── open-next.config.ts
-│   ├── package.json
-│   ├── postcss.config.mjs
-│   ├── tsconfig.json
-│   ├── webflow.json
-│   └── wrangler.json
-├── cloudflare-env.d.ts
-├── eslint.config.mjs
-├── next.config.ts
-├── open-next.config.ts
-├── package.json
-├── postcss.config.mjs
-├── tsconfig.json
-├── webflow.json
-└── wrangler.json
+## First run
+Visit `/setup` once to create the first Upward admin (the page locks after any user exists). Then add dealerships and dealer users under **Portal → Dealerships / Users**.
+
+## Local development
+```bash
+npm install
+npx wrangler d1 migrations apply DB --local
+npm run preview        # OpenNext build + local Workers runtime
 ```
-
-## Commands
-
-| Command | Action |
-| --- | --- |
-| `npm install` | Install dependencies. |
-| `npm run dev` | Start the Next.js dev server ([http://localhost:3000](http://localhost:3000)). |
-| `npm run build` | Create a production build. |
-| `npm run start` | Run the production server locally (after `npm run build`). |
-
-
-## Learn more
-
-- [Next.js documentation](https://nextjs.org/docs)
-- [Webflow Cloud](https://webflow.com/cloud)

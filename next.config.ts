@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
     basePath,
     assetPrefix: process.env.ASSETS_PREFIX || basePath,
   }),
+  env: { NEXT_PUBLIC_BASE_PATH: basePath },
+  experimental: {
+    serverActions: { bodySizeLimit: "2mb" },
+  },
 };
 
 export default nextConfig;
